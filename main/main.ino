@@ -8,20 +8,23 @@ const int positionPin2 = 10; // Output pin for position 2
 
 // Position definitions
 #define POS_UNKNOWN 0
-#define POS_TOKAMAK 1
-#define POS_DUMP 2
+#define POS_TOKAMAK 2
+#define POS_DUMP 1
 
 // Timing constants
 const unsigned long debounceDelayCommand = 10;
 const unsigned long debounceDelaySwitch = 50;
 const unsigned long moveTimeout = 200;
 const unsigned long MOVE_TIMEOUT = 2000; // 2 seconds timeout
+const bool TEST_MODE = true;  // Set to false for normal operation
+const unsigned long TEST_INTERVAL = 100000;  // 100 seconds
 
 // State variables
 volatile bool positionChanged = false;
 volatile bool commandReceived = false;
 volatile int targetPosition = POS_UNKNOWN;
 volatile unsigned long lastInterruptTime = 0;
+unsigned long lastTestTime = 0;
 
 void setMotorDirection(bool direction) {
   digitalWrite(directionPin, direction);
@@ -64,7 +67,7 @@ void moveToPosition(int target) {
   bool success = false;
   
   setMotorBrake(false);
-  setMotorDirection(target == POS_TOKAMAK);
+  setMotorDirection(target == POS_DUMP);
   
   while ((millis() - startTime) < MOVE_TIMEOUT) {
     setMotorPower(true);
@@ -156,6 +159,16 @@ void setup() {
 }
 
 void loop() {
+  if (TEST_MODE) {
+    unsigned long currentTime = millis();
+    if (currentTime - lastTestTime >= TEST_INTERVAL) {
+      targetPosition = (targetPosition == POS_TOKAMAK) ? POS_DUMP : POS_TOKAMAK;
+      commandReceived = true;
+      Serial.println("\n--- TEST MODE ---");
+      lastTestTime = currentTime;
+    }
+  }
+
   if (positionChanged) {
     printPosition();
     positionChanged = false;
