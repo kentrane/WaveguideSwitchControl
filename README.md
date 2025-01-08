@@ -1,46 +1,32 @@
 
 # Waveguide Switch Controller
 
-Arduino-based controller for managing a two-position waveguide switch with position feedback and command input.
+Arduino controller for two-position waveguide switch with position feedback.
 
-## Hardware Requirements
-- Arduino board (Uno/Nano compatible)
-- DC motor with H-bridge driver
-- Position feedback sensors (2x)
-- Command input switch
-- Power supply
-
-## Pin Configuration
-- Direction Control: Pin 13
-- PWM Motor Control: Pin 11
-- Brake Control: Pin 8
-- Command Input: Pin 2
-- Position Indicators: Pins 9, 10
+## Pins
+- Direction: 13
+- PWM Motor: 11
+- Brake: 8
+- Command: 2 (Input)
+- Position outputs: 9, 10
 - Position Sensors: A0, A1
 
-## Installation
-1. Connect hardware according to pin configuration
-2. Upload sketch to Arduino board
-3. Verify position sensor alignment
+## Features
+- Position control (TOKAMAK/DUMP)
+- Position feedback and verification
+- 2s timeout protection for not overheating motor
+- Test mode available
+- Debounced inputs
+- Status output for labview feedback to see state in control room
 
 ## Operation
-- System starts in UNKNOWN position
-- Position changes triggered by command input
-- Automatic movement between TOKAMAK and DUMP positions
-- Position feedback via LED indicators
-
-## Safety Features
-- Motor timeout protection (2s)
-- Debounced inputs
-- Brake engagement on stop
-- Position verification
+1. Power up in UNKNOWN state
+2. Command input triggers position change
+3. Outputs indicate current position
+4. Motor auto-stops on position reached
 
 ## States
-- POS_UNKNOWN (0)
-- POS_TOKAMAK (1)
-- POS_DUMP (2)
+- UNKNOWN (0)
+- DUMP (1)
+- TOKAMAK (2)
 
-## Troubleshooting
-- Timeout error indicates movement failure
-- Check sensor alignment if position unclear
-- Verify power supply if motor doesn't move
