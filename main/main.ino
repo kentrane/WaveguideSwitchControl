@@ -15,7 +15,7 @@ const int positionPin2 = 10; // Output pin for position 2
 const unsigned long debounceDelayCommand = 10;
 const unsigned long debounceDelaySwitch = 50;
 const unsigned long moveTimeout = 200;
-const unsigned long MOVE_TIMEOUT = 2000; // 2 seconds timeout
+const unsigned long MOVE_TIMEOUT = 5000; // 5 seconds timeout
 const bool TEST_MODE = true;  // Set to false for normal operation
 const unsigned long TEST_INTERVAL = 100000;  // 100 seconds
 
@@ -77,11 +77,10 @@ void moveToPosition(int target) {
 
     if (current == target) {
       success = true;
+      setMotorPower(false);
       break;
     }
-    
-    setMotorPower(false);
-    delay(100);  // Brief pause between attempts
+    //delay(100);  // Brief pause between attempts
   }
   
   setMotorPower(false);  // Ensure motor is off
@@ -181,5 +180,5 @@ void loop() {
     commandReceived = false;
   }
   
-  delay(100); // Short delay for loop stability
+  delay(50); // Short delay for loop stability
 }
